@@ -2,6 +2,7 @@ package com.edwinkesuma.sbi_assignment.service.impl;
 
 import com.edwinkesuma.sbi_assignment.dto.CreateNasabahRequest;
 import com.edwinkesuma.sbi_assignment.dto.NasabahResponse;
+import com.edwinkesuma.sbi_assignment.dto.UpdateNasabahRequest;
 import com.edwinkesuma.sbi_assignment.entity.Nasabah;
 import com.edwinkesuma.sbi_assignment.exception.ResourceNotFoundException;
 import com.edwinkesuma.sbi_assignment.mapper.NasabahMapper;
@@ -40,5 +41,16 @@ public class NasabahServiceImpl implements NasabahService {
         List<Nasabah> listNasabah = nasabahRepository.findAll();
 
         return listNasabah.stream().map(nasabah -> nasabahMapper.toResponse(nasabah)).toList();
+    }
+
+    @Override
+    public NasabahResponse updateNasabah(Long id, UpdateNasabahRequest nasabah) {
+        Nasabah savedNasabah = nasabahRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Nasabah dengan nomor ktp " + id + " tidak ditemukan"));
+
+        nasabahMapper.updateEntity(savedNasabah, nasabah);
+
+        Nasabah updatedNasabah = nasabahRepository.save(savedNasabah);
+
+        return nasabahMapper.toResponse(updatedNasabah);
     }
 }

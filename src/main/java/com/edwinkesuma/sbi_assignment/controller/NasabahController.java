@@ -2,6 +2,7 @@ package com.edwinkesuma.sbi_assignment.controller;
 
 import com.edwinkesuma.sbi_assignment.dto.CreateNasabahRequest;
 import com.edwinkesuma.sbi_assignment.dto.NasabahResponse;
+import com.edwinkesuma.sbi_assignment.dto.UpdateNasabahRequest;
 import com.edwinkesuma.sbi_assignment.service.NasabahService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -36,9 +37,16 @@ public class NasabahController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<NasabahResponse>> getAllNasabah(){
+    public ResponseEntity<List<NasabahResponse>> getAllNasabah() {
         List<NasabahResponse> listNasabah = nasabahService.getAllNasabah();
 
         return new ResponseEntity<>(listNasabah, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<NasabahResponse> updateNasabah(@PathVariable Long id, @Valid @RequestBody UpdateNasabahRequest nasabah) {
+        NasabahResponse updatedNasabah = nasabahService.updateNasabah(id, nasabah);
+
+        return new ResponseEntity<>(updatedNasabah, HttpStatus.OK);
     }
 }

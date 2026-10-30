@@ -22,6 +22,14 @@ public class NasabahMapper {
         return nasabah;
     }
 
+    public void updateEntity(Nasabah nasabah, UpdateNasabahRequest request) {
+        nasabah.setFullName(request.fullName());
+        nasabah.setAddress(request.address());
+        nasabah.setBirthPlace(request.birthPlace());
+        nasabah.setBirthDate(request.birthDate());
+        nasabah.setPhone(request.phone());
+    }
+
     public NasabahResponse toResponse(Nasabah nasabah) {
         return new NasabahResponse(
                 nasabah.getId(),
