@@ -81,7 +81,7 @@ class NasabahServiceImplTest {
     @Test
     void getNasabahByIdentityNumber_shouldReturnNasabahResponse() {
         // Arrange
-        String identityNumber = "3500123456789001";
+        String identityNumber = "3500123456789009";
 
         Nasabah savedNasabah = new Nasabah();
 
@@ -95,7 +95,7 @@ class NasabahServiceImplTest {
                 "628123456789"
         );
 
-        when(nasabahRepository.findByIdentityNumber(identityNumber))
+        when(nasabahRepository.findByIdentityNumberAndIsDeletedFalse(identityNumber))
                 .thenReturn(Optional.of(savedNasabah));
 
         when(nasabahMapper.toResponse(savedNasabah))
@@ -108,16 +108,16 @@ class NasabahServiceImplTest {
         // Assert
         assertEquals(expectedResponse, actualResponse);
 
-        verify(nasabahRepository).findByIdentityNumber(identityNumber);
+        verify(nasabahRepository).findByIdentityNumberAndIsDeletedFalse(identityNumber);
         verify(nasabahMapper).toResponse(savedNasabah);
     }
 
     @Test
     void getNasabahByIdentityNumber_shouldThrowResourceNotFoundException() {
         // Arrange
-        String identityNumber = "3500123456789001";
+        String identityNumber = "3500123456789009";
 
-        when(nasabahRepository.findByIdentityNumber(identityNumber))
+        when(nasabahRepository.findByIdentityNumberAndIsDeletedFalse(identityNumber))
                 .thenReturn(Optional.empty());
 
         // Act & Assert
@@ -131,7 +131,7 @@ class NasabahServiceImplTest {
                 exception.getMessage()
         );
 
-        verify(nasabahRepository).findByIdentityNumber(identityNumber);
+        verify(nasabahRepository).findByIdentityNumberAndIsDeletedFalse(identityNumber);
         verify(nasabahMapper, never()).toResponse(any());
     }
 

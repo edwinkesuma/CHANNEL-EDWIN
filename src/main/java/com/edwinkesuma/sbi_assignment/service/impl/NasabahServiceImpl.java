@@ -37,7 +37,7 @@ public class NasabahServiceImpl implements NasabahService {
 
     @Override
     public NasabahResponse getNasabahByIdentityNumber(String identityNumber) {
-        Nasabah savedNasabah = nasabahRepository.findByIdentityNumber(identityNumber).orElseThrow(() -> new ResourceNotFoundException("Nasabah dengan nomor ktp " + identityNumber + " tidak ditemukan"));
+        Nasabah savedNasabah = nasabahRepository.findByIdentityNumberAndIsDeletedFalse(identityNumber).orElseThrow(() -> new ResourceNotFoundException("Nasabah dengan nomor ktp " + identityNumber + " tidak ditemukan"));
         return nasabahMapper.toResponse(savedNasabah);
     }
 
