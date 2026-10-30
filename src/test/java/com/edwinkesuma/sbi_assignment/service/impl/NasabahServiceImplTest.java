@@ -4,6 +4,7 @@ import com.edwinkesuma.sbi_assignment.dto.CreateNasabahRequest;
 import com.edwinkesuma.sbi_assignment.dto.NasabahResponse;
 import com.edwinkesuma.sbi_assignment.dto.UpdateNasabahRequest;
 import com.edwinkesuma.sbi_assignment.entity.Nasabah;
+import com.edwinkesuma.sbi_assignment.exception.DuplicateResourceException;
 import com.edwinkesuma.sbi_assignment.exception.ResourceNotFoundException;
 import com.edwinkesuma.sbi_assignment.mapper.NasabahMapper;
 import com.edwinkesuma.sbi_assignment.repository.NasabahRepository;
@@ -45,6 +46,10 @@ class NasabahServiceImplTest {
         );
 
         Nasabah nasabah = new Nasabah();
+        nasabah.setFullName("Edwin Kesuma");
+        nasabah.setAddress("Jl. Mawar");
+        nasabah.setBirthPlace("Madiun");
+
         Nasabah savedNasabah = new Nasabah();
 
         NasabahResponse expectedResponse = new NasabahResponse(
@@ -57,6 +62,9 @@ class NasabahServiceImplTest {
                 "628123456789"
         );
 
+        when(nasabahRepository.existsByIdentityNumber(request.identityNumber()))
+                .thenReturn(false);
+
         when(nasabahMapper.toEntity(request))
                 .thenReturn(nasabah);
 
@@ -67,15 +75,79 @@ class NasabahServiceImplTest {
                 .thenReturn(expectedResponse);
 
         // Act
-        NasabahResponse actualResponse =
-                nasabahService.createNasabah(request);
+        NasabahResponse actualResponse = nasabahService.createNasabah(request);
 
         // Assert
         assertEquals(expectedResponse, actualResponse);
 
+        verify(nasabahRepository).existsByIdentityNumber(request.identityNumber());
         verify(nasabahMapper).toEntity(request);
         verify(nasabahRepository).save(nasabah);
         verify(nasabahMapper).toResponse(savedNasabah);
+    }
+
+    @Test
+    void createNasabah_shouldSanitizeTextFieldsBeforeSaving() {
+        // Arrange
+        CreateNasabahRequest request = new CreateNasabahRequest(
+                "  Edwin,   Kesuma.  ",
+                "  Jl.   Mawar, No. 10.  ",
+                "  Madiun,   Jawa Timur.  ",
+                LocalDate.of(2000, 5, 15),
+                "3500123456789001",
+                "628123456789"
+        );
+
+        Nasabah nasabah = new Nasabah();
+        nasabah.setFullName(request.fullName());
+        nasabah.setAddress(request.address());
+        nasabah.setBirthPlace(request.birthPlace());
+
+        when(nasabahRepository.existsByIdentityNumber(request.identityNumber()))
+                .thenReturn(false);
+
+        when(nasabahMapper.toEntity(request))
+                .thenReturn(nasabah);
+
+        when(nasabahRepository.save(any(Nasabah.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        nasabahService.createNasabah(request);
+
+        // Assert
+        assertEquals("Edwin Kesuma", nasabah.getFullName());
+        assertEquals("Jl Mawar No 10", nasabah.getAddress());
+        assertEquals("Madiun Jawa Timur", nasabah.getBirthPlace());
+
+        verify(nasabahRepository).save(nasabah);
+    }
+
+    @Test
+    void createNasabah_shouldThrowDuplicateResourceExceptionWhenIdentityNumberExists() {
+        // Arrange
+        CreateNasabahRequest request = new CreateNasabahRequest(
+                "Edwin Kesuma",
+                "Jl. Mawar",
+                "Madiun",
+                LocalDate.of(2000, 5, 15),
+                "3500123456789001",
+                "628123456789"
+        );
+
+        when(nasabahRepository.existsByIdentityNumber(request.identityNumber()))
+                .thenReturn(true);
+
+        // Act & Assert
+        assertThrows(
+                DuplicateResourceException.class,
+                () -> nasabahService.createNasabah(request)
+        );
+
+        verify(nasabahRepository).existsByIdentityNumber(request.identityNumber());
+        verify(nasabahMapper, never()).toEntity(any());
+        verify(nasabahRepository, never()).save(any());
+        verify(nasabahMapper, never()).toResponse(any());
     }
 
     @Test

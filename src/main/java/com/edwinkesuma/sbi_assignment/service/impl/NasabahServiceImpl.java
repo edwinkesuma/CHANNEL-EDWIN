@@ -9,6 +9,7 @@ import com.edwinkesuma.sbi_assignment.exception.ResourceNotFoundException;
 import com.edwinkesuma.sbi_assignment.mapper.NasabahMapper;
 import com.edwinkesuma.sbi_assignment.repository.NasabahRepository;
 import com.edwinkesuma.sbi_assignment.service.NasabahService;
+import com.edwinkesuma.sbi_assignment.utils.TextSanitizer;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +31,13 @@ public class NasabahServiceImpl implements NasabahService {
             throw new DuplicateResourceException("Nasabah dengan nomor ktp " + nasabahRequest.identityNumber() + " sudah terdaftar");
         }
 
-        Nasabah savedNasabah = nasabahRepository.save(nasabahMapper.toEntity(nasabahRequest));
+        Nasabah nasabah = nasabahMapper.toEntity(nasabahRequest);
+
+        nasabah.setFullName(TextSanitizer.sanitize(nasabah.getFullName()));
+        nasabah.setAddress(TextSanitizer.sanitize(nasabah.getAddress()));
+        nasabah.setBirthPlace(TextSanitizer.sanitize(nasabah.getBirthPlace()));
+
+        Nasabah savedNasabah = nasabahRepository.save(nasabah);
 
         return nasabahMapper.toResponse(savedNasabah);
     }
