@@ -9,6 +9,7 @@ import com.edwinkesuma.sbi_assignment.exception.ResourceNotFoundException;
 import com.edwinkesuma.sbi_assignment.mapper.NasabahMapper;
 import com.edwinkesuma.sbi_assignment.repository.NasabahRepository;
 import com.edwinkesuma.sbi_assignment.service.NasabahService;
+import com.edwinkesuma.sbi_assignment.utils.PhoneNumberNormalizer;
 import com.edwinkesuma.sbi_assignment.utils.TextSanitizer;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,7 @@ public class NasabahServiceImpl implements NasabahService {
         nasabah.setFullName(TextSanitizer.sanitize(nasabah.getFullName()));
         nasabah.setAddress(TextSanitizer.sanitize(nasabah.getAddress()));
         nasabah.setBirthPlace(TextSanitizer.sanitize(nasabah.getBirthPlace()));
+        nasabah.setPhone(PhoneNumberNormalizer.normalize(nasabah.getPhone()));
 
         Nasabah savedNasabah = nasabahRepository.save(nasabah);
 
@@ -64,6 +66,7 @@ public class NasabahServiceImpl implements NasabahService {
         savedNasabah.setFullName(TextSanitizer.sanitize(savedNasabah.getFullName()));
         savedNasabah.setAddress(TextSanitizer.sanitize(savedNasabah.getAddress()));
         savedNasabah.setBirthPlace(TextSanitizer.sanitize(savedNasabah.getBirthPlace()));
+        savedNasabah.setPhone(PhoneNumberNormalizer.normalize(savedNasabah.getPhone()));
 
         Nasabah updatedNasabah = nasabahRepository.save(savedNasabah);
 
