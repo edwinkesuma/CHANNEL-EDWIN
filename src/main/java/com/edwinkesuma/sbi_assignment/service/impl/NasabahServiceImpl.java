@@ -9,6 +9,8 @@ import com.edwinkesuma.sbi_assignment.repository.NasabahRepository;
 import com.edwinkesuma.sbi_assignment.service.NasabahService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class NasabahServiceImpl implements NasabahService {
 
@@ -31,5 +33,12 @@ public class NasabahServiceImpl implements NasabahService {
     public NasabahResponse getNasabahByIdentityNumber(String identityNumber) {
         Nasabah savedNasabah = nasabahRepository.findByIdentityNumber(identityNumber).orElseThrow(() -> new ResourceNotFoundException("Nasabah dengan nomor ktp " + identityNumber + " tidak ditemukan"));
         return nasabahMapper.toResponse(savedNasabah);
+    }
+
+    @Override
+    public List<NasabahResponse> getAllNasabah() {
+        List<Nasabah> listNasabah = nasabahRepository.findAll();
+
+        return listNasabah.stream().map(nasabah -> nasabahMapper.toResponse(nasabah)).toList();
     }
 }

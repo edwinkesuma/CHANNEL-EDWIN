@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.http.HttpResponse;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/nasabah")
@@ -32,5 +33,12 @@ public class NasabahController {
         NasabahResponse savedNasabah = nasabahService.getNasabahByIdentityNumber(identityNumber);
 
         return new ResponseEntity<>(savedNasabah, HttpStatus.OK);
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<NasabahResponse>> getAllNasabah(){
+        List<NasabahResponse> listNasabah = nasabahService.getAllNasabah();
+
+        return new ResponseEntity<>(listNasabah, HttpStatus.OK);
     }
 }
