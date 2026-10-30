@@ -49,4 +49,11 @@ public class NasabahController {
 
         return new ResponseEntity<>(updatedNasabah, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteNasabah(@PathVariable Long id) {
+        nasabahService.deleteNasabah(id);
+
+        return new ResponseEntity<>("Nasabah berhasil dihapus", HttpStatus.OK);
+    }
 }

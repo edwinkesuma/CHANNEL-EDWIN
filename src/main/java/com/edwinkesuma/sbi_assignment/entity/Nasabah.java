@@ -29,4 +29,7 @@ public class Nasabah {
     private String identityNumber;
 
     private String phone;
+
+    @Column(nullable = false)
+    private boolean isDeleted = false;
 }

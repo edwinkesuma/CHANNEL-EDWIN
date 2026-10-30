@@ -53,4 +53,14 @@ public class NasabahServiceImpl implements NasabahService {
 
         return nasabahMapper.toResponse(updatedNasabah);
     }
+
+    @Override
+    public void deleteNasabah(Long id) {
+        Nasabah savedNasabah = nasabahRepository.findByIdAndIsDeletedFalse(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Nasabah dengan id " + id + " tidak ditemukan"
+                ));
+
+        savedNasabah.setDeleted(true);
+    }
 }

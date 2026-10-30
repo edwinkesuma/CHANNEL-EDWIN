@@ -14,4 +14,6 @@ public interface NasabahService {
     List<NasabahResponse> getAllNasabah();
 
     NasabahResponse updateNasabah(Long id, UpdateNasabahRequest nasabah);
+
+    void deleteNasabah(Long id);
 }
