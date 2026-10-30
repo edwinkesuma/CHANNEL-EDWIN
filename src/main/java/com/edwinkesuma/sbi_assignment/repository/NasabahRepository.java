@@ -9,4 +9,6 @@ public interface NasabahRepository extends JpaRepository<Nasabah, Long> {
     Optional<Nasabah> findByIdentityNumber(String identityNumber);
 
     Optional<Nasabah> findByIdAndIsDeletedFalse(Long id);
+
+    boolean existsByIdentityNumber(String identityNumber);
 }

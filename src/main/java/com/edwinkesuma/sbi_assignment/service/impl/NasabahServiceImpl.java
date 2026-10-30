@@ -4,6 +4,7 @@ import com.edwinkesuma.sbi_assignment.dto.CreateNasabahRequest;
 import com.edwinkesuma.sbi_assignment.dto.NasabahResponse;
 import com.edwinkesuma.sbi_assignment.dto.UpdateNasabahRequest;
 import com.edwinkesuma.sbi_assignment.entity.Nasabah;
+import com.edwinkesuma.sbi_assignment.exception.DuplicateResourceException;
 import com.edwinkesuma.sbi_assignment.exception.ResourceNotFoundException;
 import com.edwinkesuma.sbi_assignment.mapper.NasabahMapper;
 import com.edwinkesuma.sbi_assignment.repository.NasabahRepository;
@@ -25,6 +26,10 @@ public class NasabahServiceImpl implements NasabahService {
 
     @Override
     public NasabahResponse createNasabah(CreateNasabahRequest nasabahRequest) {
+        if (nasabahRepository.existsByIdentityNumber(nasabahRequest.identityNumber())) {
+            throw new DuplicateResourceException("Nasabah dengan nomor ktp " + nasabahRequest.identityNumber() + " sudah terdaftar");
+        }
+
         Nasabah savedNasabah = nasabahRepository.save(nasabahMapper.toEntity(nasabahRequest));
 
         return nasabahMapper.toResponse(savedNasabah);
