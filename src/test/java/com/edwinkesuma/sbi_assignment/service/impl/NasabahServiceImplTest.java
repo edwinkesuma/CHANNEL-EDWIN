@@ -166,7 +166,7 @@ class NasabahServiceImplTest {
         List<NasabahResponse> expectedResponse =
                 List.of(response1, response2);
 
-        when(nasabahRepository.findAll())
+        when(nasabahRepository.findAllByIsDeletedFalse())
                 .thenReturn(listNasabah);
 
         when(nasabahMapper.toResponse(nasabah1))
@@ -182,7 +182,7 @@ class NasabahServiceImplTest {
         // Assert
         assertEquals(expectedResponse, actualResponse);
 
-        verify(nasabahRepository).findAll();
+        verify(nasabahRepository).findAllByIsDeletedFalse();
         verify(nasabahMapper).toResponse(nasabah1);
         verify(nasabahMapper).toResponse(nasabah2);
     }
@@ -190,7 +190,7 @@ class NasabahServiceImplTest {
     @Test
     void getAllNasabah_shouldReturnEmptyListWhenNoNasabahExists() {
         // Arrange
-        when(nasabahRepository.findAll())
+        when(nasabahRepository.findAllByIsDeletedFalse())
                 .thenReturn(List.of());
 
         // Act
@@ -201,7 +201,7 @@ class NasabahServiceImplTest {
         assertNotNull(actualResponse);
         assertTrue(actualResponse.isEmpty());
 
-        verify(nasabahRepository).findAll();
+        verify(nasabahRepository).findAllByIsDeletedFalse();
         verify(nasabahMapper, never()).toResponse(any());
     }
 

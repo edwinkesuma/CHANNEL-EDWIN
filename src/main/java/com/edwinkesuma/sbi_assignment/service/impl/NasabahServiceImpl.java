@@ -43,7 +43,7 @@ public class NasabahServiceImpl implements NasabahService {
 
     @Override
     public List<NasabahResponse> getAllNasabah() {
-        List<Nasabah> listNasabah = nasabahRepository.findAll();
+        List<Nasabah> listNasabah = nasabahRepository.findAllByIsDeletedFalse();
 
         return listNasabah.stream().map(nasabah -> nasabahMapper.toResponse(nasabah)).toList();
     }
