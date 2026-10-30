@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -133,6 +134,76 @@ class NasabahServiceImplTest {
         );
 
         verify(nasabahRepository).findByIdentityNumber(identityNumber);
+        verify(nasabahMapper, never()).toResponse(any());
+    }
+
+    @Test
+    void getAllNasabah_shouldReturnListOfNasabahResponse() {
+        // Arrange
+        Nasabah nasabah1 = new Nasabah();
+        Nasabah nasabah2 = new Nasabah();
+
+        List<Nasabah> listNasabah = List.of(nasabah1, nasabah2);
+
+        NasabahResponse response1 = new NasabahResponse(
+                1L,
+                "Edwin Kesuma",
+                "Jl. Mawar",
+                "Madiun",
+                LocalDate.of(2000, 5, 15),
+                "3500123456789001",
+                "628123456789"
+        );
+
+        NasabahResponse response2 = new NasabahResponse(
+                2L,
+                "Budi Santoso",
+                "Jl. Melati",
+                "Surabaya",
+                LocalDate.of(1999, 8, 20),
+                "3500123456789002",
+                "628987654321"
+        );
+
+        List<NasabahResponse> expectedResponse =
+                List.of(response1, response2);
+
+        when(nasabahRepository.findAll())
+                .thenReturn(listNasabah);
+
+        when(nasabahMapper.toResponse(nasabah1))
+                .thenReturn(response1);
+
+        when(nasabahMapper.toResponse(nasabah2))
+                .thenReturn(response2);
+
+        // Act
+        List<NasabahResponse> actualResponse =
+                nasabahService.getAllNasabah();
+
+        // Assert
+        assertEquals(expectedResponse, actualResponse);
+
+        verify(nasabahRepository).findAll();
+        verify(nasabahMapper).toResponse(nasabah1);
+        verify(nasabahMapper).toResponse(nasabah2);
+    }
+
+    @Test
+    void getAllNasabah_shouldReturnEmptyListWhenNoNasabahExists() {
+        // Arrange
+        when(nasabahRepository.findAll())
+                .thenReturn(List.of());
+
+        // Act
+        List<NasabahResponse> actualResponse =
+                nasabahService.getAllNasabah();
+
+        // Assert
+        assertNotNull(actualResponse);
+        assertTrue(actualResponse.isEmpty());
+
+        verify(nasabahRepository).findAll();
         verify(nasabahMapper, never()).toResponse(any());
     }
 }
