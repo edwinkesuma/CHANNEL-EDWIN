@@ -18,10 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class NasabahServiceImplTest {
@@ -290,6 +287,54 @@ class NasabahServiceImplTest {
         verify(nasabahRepository, never()).save(any());
 
         verify(nasabahMapper, never()).toResponse(any());
+    }
+
+    @Test
+    void deleteNasabah_shouldSetDeletedToTrue() {
+        // Arrange
+        Long id = 1L;
+
+        Nasabah savedNasabah = new Nasabah();
+        savedNasabah.setDeleted(false);
+
+        when(nasabahRepository.findByIdAndIsDeletedFalse(id))
+                .thenReturn(Optional.of(savedNasabah));
+
+        // Act
+        nasabahService.deleteNasabah(id);
+
+        // Assert
+        assertTrue(savedNasabah.isDeleted());
+
+        verify(nasabahRepository)
+                .findByIdAndIsDeletedFalse(id);
+
+        verifyNoMoreInteractions(nasabahRepository);
+    }
+
+    @Test
+    void deleteNasabah_shouldThrowResourceNotFoundExceptionWhenNasabahNotFound() {
+        // Arrange
+        Long id = 1L;
+
+        when(nasabahRepository.findByIdAndIsDeletedFalse(id))
+                .thenReturn(Optional.empty());
+
+        // Act & Assert
+        ResourceNotFoundException exception = assertThrows(
+                ResourceNotFoundException.class,
+                () -> nasabahService.deleteNasabah(id)
+        );
+
+        assertEquals(
+                "Nasabah dengan id " + id + " tidak ditemukan",
+                exception.getMessage()
+        );
+
+        verify(nasabahRepository)
+                .findByIdAndIsDeletedFalse(id);
+
+        verifyNoMoreInteractions(nasabahRepository);
     }
 
 }
