@@ -291,6 +291,9 @@ class NasabahServiceImplTest {
         );
 
         Nasabah savedNasabah = new Nasabah();
+        savedNasabah.setFullName("Edwin Kesuma");
+        savedNasabah.setAddress("Jl. Mawar");
+        savedNasabah.setBirthPlace("Madiun");
 
         NasabahResponse expectedResponse = new NasabahResponse(
                 1L,
@@ -304,6 +307,19 @@ class NasabahServiceImplTest {
 
         when(nasabahRepository.findByIdAndIsDeletedFalse(id))
                 .thenReturn(Optional.of(savedNasabah));
+
+        doAnswer(invocation -> {
+            Nasabah entity = invocation.getArgument(0);
+            UpdateNasabahRequest updateRequest = invocation.getArgument(1);
+
+            entity.setFullName(updateRequest.fullName());
+            entity.setAddress(updateRequest.address());
+            entity.setBirthPlace(updateRequest.birthPlace());
+            entity.setBirthDate(updateRequest.birthDate());
+            entity.setPhone(updateRequest.phone());
+
+            return null;
+        }).when(nasabahMapper).updateEntity(savedNasabah, request);
 
         when(nasabahRepository.save(savedNasabah))
                 .thenReturn(savedNasabah);
@@ -322,6 +338,49 @@ class NasabahServiceImplTest {
         verify(nasabahMapper).updateEntity(savedNasabah, request);
         verify(nasabahRepository).save(savedNasabah);
         verify(nasabahMapper).toResponse(savedNasabah);
+    }
+
+    @Test
+    void updateNasabah_shouldSanitizeTextFieldsBeforeSaving() {
+        // Arrange
+        Long id = 1L;
+
+        UpdateNasabahRequest request = new UpdateNasabahRequest(
+                "  Edwin,   Kesuma.  ",
+                "  Jl.   Melati, No. 10.  ",
+                "  Surabaya,   Jawa Timur.  ",
+                LocalDate.of(2000, 5, 15),
+                "628987654321"
+        );
+
+        Nasabah savedNasabah = new Nasabah();
+
+        when(nasabahRepository.findByIdAndIsDeletedFalse(id))
+                .thenReturn(Optional.of(savedNasabah));
+
+        doAnswer(invocation -> {
+            Nasabah entity = invocation.getArgument(0);
+            UpdateNasabahRequest updateRequest = invocation.getArgument(1);
+
+            entity.setFullName(updateRequest.fullName());
+            entity.setAddress(updateRequest.address());
+            entity.setBirthPlace(updateRequest.birthPlace());
+
+            return null;
+        }).when(nasabahMapper).updateEntity(savedNasabah, request);
+
+        when(nasabahRepository.save(savedNasabah))
+                .thenReturn(savedNasabah);
+
+        // Act
+        nasabahService.updateNasabah(id, request);
+
+        // Assert
+        assertEquals("Edwin Kesuma", savedNasabah.getFullName());
+        assertEquals("Jl Melati No 10", savedNasabah.getAddress());
+        assertEquals("Surabaya Jawa Timur", savedNasabah.getBirthPlace());
+
+        verify(nasabahRepository).save(savedNasabah);
     }
 
     @Test
@@ -352,12 +411,8 @@ class NasabahServiceImplTest {
         );
 
         verify(nasabahRepository).findByIdAndIsDeletedFalse(id);
-
-        verify(nasabahMapper, never())
-                .updateEntity(any(), any());
-
+        verify(nasabahMapper, never()).updateEntity(any(), any());
         verify(nasabahRepository, never()).save(any());
-
         verify(nasabahMapper, never()).toResponse(any());
     }
 

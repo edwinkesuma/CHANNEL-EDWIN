@@ -61,6 +61,10 @@ public class NasabahServiceImpl implements NasabahService {
 
         nasabahMapper.updateEntity(savedNasabah, nasabah);
 
+        savedNasabah.setFullName(TextSanitizer.sanitize(savedNasabah.getFullName()));
+        savedNasabah.setAddress(TextSanitizer.sanitize(savedNasabah.getAddress()));
+        savedNasabah.setBirthPlace(TextSanitizer.sanitize(savedNasabah.getBirthPlace()));
+
         Nasabah updatedNasabah = nasabahRepository.save(savedNasabah);
 
         return nasabahMapper.toResponse(updatedNasabah);
