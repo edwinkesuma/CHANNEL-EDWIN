@@ -230,7 +230,7 @@ class NasabahServiceImplTest {
                 "628987654321"
         );
 
-        when(nasabahRepository.findById(id))
+        when(nasabahRepository.findByIdAndIsDeletedFalse(id))
                 .thenReturn(Optional.of(savedNasabah));
 
         when(nasabahRepository.save(savedNasabah))
@@ -246,7 +246,7 @@ class NasabahServiceImplTest {
         // Assert
         assertEquals(expectedResponse, actualResponse);
 
-        verify(nasabahRepository).findById(id);
+        verify(nasabahRepository).findByIdAndIsDeletedFalse(id);
         verify(nasabahMapper).updateEntity(savedNasabah, request);
         verify(nasabahRepository).save(savedNasabah);
         verify(nasabahMapper).toResponse(savedNasabah);
@@ -265,7 +265,7 @@ class NasabahServiceImplTest {
                 "628987654321"
         );
 
-        when(nasabahRepository.findById(id))
+        when(nasabahRepository.findByIdAndIsDeletedFalse(id))
                 .thenReturn(Optional.empty());
 
         // Act & Assert
@@ -279,7 +279,7 @@ class NasabahServiceImplTest {
                 exception.getMessage()
         );
 
-        verify(nasabahRepository).findById(id);
+        verify(nasabahRepository).findByIdAndIsDeletedFalse(id);
 
         verify(nasabahMapper, never())
                 .updateEntity(any(), any());

@@ -50,7 +50,7 @@ public class NasabahServiceImpl implements NasabahService {
 
     @Override
     public NasabahResponse updateNasabah(Long id, UpdateNasabahRequest nasabah) {
-        Nasabah savedNasabah = nasabahRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Nasabah dengan nomor ktp " + id + " tidak ditemukan"));
+        Nasabah savedNasabah = nasabahRepository.findByIdAndIsDeletedFalse(id).orElseThrow(() -> new ResourceNotFoundException("Nasabah dengan nomor ktp " + id + " tidak ditemukan"));
 
         nasabahMapper.updateEntity(savedNasabah, nasabah);
 
