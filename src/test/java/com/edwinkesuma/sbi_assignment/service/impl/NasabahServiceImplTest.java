@@ -300,6 +300,9 @@ class NasabahServiceImplTest {
         when(nasabahRepository.findByIdAndIsDeletedFalse(id))
                 .thenReturn(Optional.of(savedNasabah));
 
+        when(nasabahRepository.save(savedNasabah))
+                .thenReturn(savedNasabah);
+
         // Act
         nasabahService.deleteNasabah(id);
 
@@ -308,6 +311,9 @@ class NasabahServiceImplTest {
 
         verify(nasabahRepository)
                 .findByIdAndIsDeletedFalse(id);
+
+        verify(nasabahRepository)
+                .save(savedNasabah);
 
         verifyNoMoreInteractions(nasabahRepository);
     }

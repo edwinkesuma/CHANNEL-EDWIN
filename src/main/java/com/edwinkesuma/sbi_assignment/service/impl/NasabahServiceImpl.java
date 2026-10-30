@@ -67,5 +67,6 @@ public class NasabahServiceImpl implements NasabahService {
                 ));
 
         savedNasabah.setDeleted(true);
+        nasabahRepository.save(savedNasabah);
     }
 }
