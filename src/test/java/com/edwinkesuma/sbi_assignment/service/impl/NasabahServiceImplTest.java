@@ -2,6 +2,7 @@ package com.edwinkesuma.sbi_assignment.service.impl;
 
 import com.edwinkesuma.sbi_assignment.dto.CreateNasabahRequest;
 import com.edwinkesuma.sbi_assignment.dto.NasabahResponse;
+import com.edwinkesuma.sbi_assignment.dto.UpdateNasabahRequest;
 import com.edwinkesuma.sbi_assignment.entity.Nasabah;
 import com.edwinkesuma.sbi_assignment.exception.ResourceNotFoundException;
 import com.edwinkesuma.sbi_assignment.mapper.NasabahMapper;
@@ -206,4 +207,89 @@ class NasabahServiceImplTest {
         verify(nasabahRepository).findAll();
         verify(nasabahMapper, never()).toResponse(any());
     }
+
+    @Test
+    void updateNasabah_shouldReturnUpdatedNasabahResponse() {
+        // Arrange
+        Long id = 1L;
+
+        UpdateNasabahRequest request = new UpdateNasabahRequest(
+                "Edwin Kesuma Updated",
+                "Jl. Melati",
+                "Surabaya",
+                LocalDate.of(2000, 5, 15),
+                "628987654321"
+        );
+
+        Nasabah savedNasabah = new Nasabah();
+
+        NasabahResponse expectedResponse = new NasabahResponse(
+                1L,
+                "Edwin Kesuma Updated",
+                "Jl. Melati",
+                "Surabaya",
+                LocalDate.of(2000, 5, 15),
+                "3500123456789001",
+                "628987654321"
+        );
+
+        when(nasabahRepository.findById(id))
+                .thenReturn(Optional.of(savedNasabah));
+
+        when(nasabahRepository.save(savedNasabah))
+                .thenReturn(savedNasabah);
+
+        when(nasabahMapper.toResponse(savedNasabah))
+                .thenReturn(expectedResponse);
+
+        // Act
+        NasabahResponse actualResponse =
+                nasabahService.updateNasabah(id, request);
+
+        // Assert
+        assertEquals(expectedResponse, actualResponse);
+
+        verify(nasabahRepository).findById(id);
+        verify(nasabahMapper).updateEntity(savedNasabah, request);
+        verify(nasabahRepository).save(savedNasabah);
+        verify(nasabahMapper).toResponse(savedNasabah);
+    }
+
+    @Test
+    void updateNasabah_shouldThrowResourceNotFoundExceptionWhenNasabahNotFound() {
+        // Arrange
+        Long id = 1L;
+
+        UpdateNasabahRequest request = new UpdateNasabahRequest(
+                "Edwin Kesuma Updated",
+                "Jl. Melati",
+                "Surabaya",
+                LocalDate.of(2000, 5, 15),
+                "628987654321"
+        );
+
+        when(nasabahRepository.findById(id))
+                .thenReturn(Optional.empty());
+
+        // Act & Assert
+        ResourceNotFoundException exception = assertThrows(
+                ResourceNotFoundException.class,
+                () -> nasabahService.updateNasabah(id, request)
+        );
+
+        assertEquals(
+                "Nasabah dengan nomor ktp " + id + " tidak ditemukan",
+                exception.getMessage()
+        );
+
+        verify(nasabahRepository).findById(id);
+
+        verify(nasabahMapper, never())
+                .updateEntity(any(), any());
+
+        verify(nasabahRepository, never()).save(any());
+
+        verify(nasabahMapper, never()).toResponse(any());
+    }
+
 }
