@@ -21,9 +21,16 @@ public class NasabahController {
     }
 
     @PostMapping
-    public ResponseEntity<NasabahResponse> createNasabah(@Valid @RequestBody CreateNasabahRequest nasabah){
+    public ResponseEntity<NasabahResponse> createNasabah(@Valid @RequestBody CreateNasabahRequest nasabah) {
         NasabahResponse savedNasabah = nasabahService.createNasabah(nasabah);
 
         return new ResponseEntity<>(savedNasabah, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{identityNumber}")
+    public ResponseEntity<NasabahResponse> getNasabahByIdentityNumber(@PathVariable String identityNumber) {
+        NasabahResponse savedNasabah = nasabahService.getNasabahByIdentityNumber(identityNumber);
+
+        return new ResponseEntity<>(savedNasabah, HttpStatus.OK);
     }
 }

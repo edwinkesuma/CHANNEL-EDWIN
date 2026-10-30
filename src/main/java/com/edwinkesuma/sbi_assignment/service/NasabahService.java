@@ -5,4 +5,6 @@ import com.edwinkesuma.sbi_assignment.dto.NasabahResponse;
 
 public interface NasabahService {
     NasabahResponse createNasabah(CreateNasabahRequest nasabahRequest);
+
+    NasabahResponse getNasabahByIdentityNumber(String identityNumber);
 }
