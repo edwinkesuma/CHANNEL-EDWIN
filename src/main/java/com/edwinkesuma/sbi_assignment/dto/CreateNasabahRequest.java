@@ -31,8 +31,8 @@ public record CreateNasabahRequest(
 
         @NotBlank(message = "Nomor handphone wajib diisi")
         @Pattern(
-                regexp = "^628[0-9]{8,11}$",
-                message = "Nomor handphone harus menggunakan format 628xxx dan terdiri dari 11-14 digit"
+                regexp = "^(\\+62|62|0)?8[0-9]{8,11}$",
+                message = "Nomor handphone harus menggunakan format Indonesia yang valid"
         )
         String phone
 
