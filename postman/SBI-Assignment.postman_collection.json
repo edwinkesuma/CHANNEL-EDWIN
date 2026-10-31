@@ -1,0 +1,170 @@
+{
+	"info": {
+		"_postman_id": "c9b36e00-8cf2-45ac-b239-3cab4346f2ff",
+		"name": "SBI Assignment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11634868"
+	},
+	"item": [
+		{
+			"name": "Create Nasabah",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"fullName\": \"John Doe\",\n  \"address\": \"Jl. Merdeka No. 10, Surabaya\",\n  \"birthPlace\": \"Surabaya\",\n  \"birthDate\": \"1995-05-15\",\n  \"identityNumber\": \"3578011505950002\",\n  \"phone\": \"081234567890\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/nasabah",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"nasabah"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Nasabah By No KTP",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fullName\": \"John Doe\",\n    \"address\": \"Jl. Merdeka No 10, Madiun, Jawa Timur\",\n    \"birthPlace\": \"Madiun\",\n    \"birthDate\": \"2000-05-15\",\n    \"identityNumber\": \"3508121505000001\",\n    \"phone\": \"6281234567890\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/nasabah/3578011505950002",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"nasabah",
+						"3578011505950002"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Nasabah",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fullName\": \"John Doe\",\n    \"address\": \"Jl. Merdeka No 10, Madiun, Jawa Timur\",\n    \"birthPlace\": \"Madiun\",\n    \"birthDate\": \"2000-05-15\",\n    \"identityNumber\": \"3508121505000001\",\n    \"phone\": \"6281234567890\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/nasabah",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"nasabah"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Nasabah",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"fullName\": \"Jane, Doe.\",\n  \"address\": \"Jl. Merdeka, No. 20.\",\n  \"birthDate\": \"1998-05-15\",\n  \"birthPlace\": \"Surabaya\",\n  \"phone\": \"6281234567899\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/nasabah/30001",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"nasabah",
+						"30001"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Nasabah",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fullName\": \"Jane Doe\",\n    \"address\": \"Jl. Merdeka No 10, Surakarta, Jawa Tengah\",\n    \"birthPlace\": \"Madiun\",\n    \"birthDate\": \"2000-06-15\",\n    \"phone\": \"6281234567891\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/nasabah/30001",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"nasabah",
+						"30001"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
